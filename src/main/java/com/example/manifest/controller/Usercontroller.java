@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RestController
-@CrossOrigin(origins ="http://localhost:8080", maxAge = 3600, allowCredentials="true")
+@CrossOrigin(origins ="http://localhost:4200")
 @RequestMapping("/api/test/User")
 
 public class Usercontroller {
@@ -49,7 +49,8 @@ public class Usercontroller {
     }
 
     @PostMapping(path="/Login")
-    public ResponseEntity<String> Login(@RequestBody Login login) {
+    @CrossOrigin(origins = "http://localhost:4200")
+    public ResponseEntity<?> Login(@RequestBody Login login) {
         return service.Login(login);
     }
 

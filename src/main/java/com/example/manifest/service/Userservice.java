@@ -4,6 +4,7 @@ import com.example.manifest.Entity.User;
 import com.example.manifest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -53,11 +54,12 @@ public class Userservice {
     public List<User>all(){
         return repository.findAll();
     }
-    public ResponseEntity<String>Login(Login login){
-        if(repository.findUserByEmailAndPassword(login.getEmail(),login.getPassword())!=null){
-            return ResponseEntity.ok("user your loged");
+    public ResponseEntity<?>Login(Login login){
+        User user = repository.findUserByEmailAndPassword(login.getEmail(),login.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok(user);
         }else{
-            return ResponseEntity.ofNullable("not exist");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
         }
     }
 
