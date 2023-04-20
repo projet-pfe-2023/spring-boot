@@ -12,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/test/Role")
-public class RoleControleur {
+public class RoleController {
     @Autowired
     RoleRepository roleRepository;
 
