@@ -16,4 +16,6 @@ public class RegisterRequest {
     private String email;
     private String password;
     private int cin;
+    private boolean isEnabled = false;
+    private String partenaire;
 }

@@ -1,6 +1,7 @@
 package com.example.manifest.service;
 
 import com.example.manifest.Token.TokenRepository;
+import com.example.manifest.controller.AuthenticationRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,4 +33,6 @@ public class LogoutService implements LogoutHandler {
             SecurityContextHolder.clearContext();
         }
     }
+
+
 }
