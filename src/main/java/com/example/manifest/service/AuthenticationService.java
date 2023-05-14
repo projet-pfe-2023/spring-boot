@@ -7,6 +7,7 @@ import com.example.manifest.Token.TokenType;
 import com.example.manifest.controller.AuthenticationRequest;
 import com.example.manifest.controller.AuthenticationResponse;
 import com.example.manifest.controller.RegisterRequest;
+import com.example.manifest.exception.UserNotFoundException;
 import com.example.manifest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +35,8 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .cin(request.getCin())
-                .eRole(ERole.ROLE_USER)
+                .partenaire(request.getPartenaire())
+                .eRole(ERole.USER)
                 .build();
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
@@ -84,5 +89,19 @@ public class AuthenticationService {
         tokenRepository.save(token);
     }
 
-    
+
+    public List<User> getUsers(){
+        return (List<User>) repository.findAll();
+    }
+
+    public User finduserById(Integer id) {
+        Optional<User> utOptional = repository.findById(id);
+        if (utOptional.isEmpty()) {
+            return null;
+        } else {
+            return utOptional.get();
+        }
+    }
+
+
 }

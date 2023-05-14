@@ -1,13 +1,19 @@
 package com.example.manifest.service;
+
+import com.example.manifest.Entity.ERole;
 import com.example.manifest.Entity.Login;
 import com.example.manifest.Entity.User;
+
+import com.example.manifest.exception.UserNotFoundException;
 import com.example.manifest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -64,5 +70,22 @@ public class Userservice {
         }
     }
 
+    public User updateUserRole(Integer id, String newRole) {
+        User user = repository.findById(id).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException("User with ID " + id + " not found.");
+        }
+        user.setERole(ERole.valueOf(newRole));
+        return repository.save(user);
+    }
 
+    public boolean activateUser(Integer userId) {
+        User user = repository.findById(userId).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException("User with ID " + userId + " not found.");
+        }
+        user.setEnabled(true);
+        repository.save(user);
+        return true;
+    }
 }
