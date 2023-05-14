@@ -20,7 +20,7 @@ public class Userservice {
 
     public List<User> getAllUsers() { return repository.findAll(); }
 
-    public User finduserById(Long id) {
+    public User finduserById(Integer id) {
         Optional<User> utOptional = repository.findById(id);
         if (utOptional.isEmpty()) {
             return null;
@@ -34,7 +34,7 @@ public class Userservice {
     }
 
 
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         repository.deleteById(id);
     }
 
@@ -48,12 +48,13 @@ public class Userservice {
         }
     }
 
-    public Long save(User user) {
+    public Integer save(User user) {
         return repository.save(user).getId();
     }
     public List<User>all(){
         return repository.findAll();
     }
+
     public ResponseEntity<?>Login(Login login){
         User user = repository.findUserByEmailAndPassword(login.getEmail(),login.getPassword());
         if (user != null) {
