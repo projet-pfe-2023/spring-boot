@@ -79,13 +79,5 @@ public class Userservice {
         return repository.save(user);
     }
 
-    public boolean activateUser(Integer userId) {
-        User user = repository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException("User with ID " + userId + " not found.");
-        }
-        user.setEnabled(true);
-        repository.save(user);
-        return true;
-    }
+
 }

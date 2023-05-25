@@ -11,7 +11,7 @@ import com.example.manifest.service.Userservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.*;
 
 
@@ -19,8 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
+import java.util.Optional;
 
-@Controller
+
 @RestController
 @CrossOrigin(origins ="http://localhost:4200",allowCredentials = "true")
 @RequestMapping("/api/test/User")
@@ -88,13 +89,32 @@ public class Usercontroller {
         return ResponseEntity.ok(user);
     }
 
-    @PostMapping("/{id}/activate")
-    public ResponseEntity<String> activateUserAccount(@PathVariable("id") Integer userId) {
-        boolean isActivated = service.activateUser(userId);
-        if (isActivated) {
-            return ResponseEntity.ok("User account activated successfully.");
-        }else {
-            return ResponseEntity.badRequest().body("Failed to activate user account.");
+
+    @PutMapping(path = "/{id}/activer")
+    @CrossOrigin(origins ="http://localhost:4200")
+    public ResponseEntity<User> activateUserAccount(@PathVariable Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
+        User user = optionalUser.get();
+        user.setDesactive(true);
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
+
+
+
+    @PutMapping(path = "/{id}/desactiver")
+    @CrossOrigin(origins ="http://localhost:4200")
+    public ResponseEntity<User> desactiverOffre(@PathVariable Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        user.setDesactive(false);
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
     }
 }
