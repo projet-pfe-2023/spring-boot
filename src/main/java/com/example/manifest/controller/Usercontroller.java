@@ -29,7 +29,7 @@ import java.util.Optional;
 public class Usercontroller {
 
     @Autowired
-    private   Userservice service;
+    private Userservice service;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -116,5 +116,10 @@ public class Usercontroller {
         user.setDesactive(false);
         userRepository.save(user);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping(path = "/total")
+    public Long getTotalUsers() {
+        return service.getTotalUsers();
     }
 }

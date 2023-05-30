@@ -79,5 +79,8 @@ public class Userservice {
         return repository.save(user);
     }
 
+    public Long getTotalUsers() {
+        return repository.getTotalUsers();
+    }
 
 }

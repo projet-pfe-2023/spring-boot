@@ -2,7 +2,8 @@ package com.example.manifest.repository;
 
 import com.example.manifest.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.Query;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +18,8 @@ public interface UserRepository extends JpaRepository<User,Integer> , CrudReposi
 
     public User findUserByEmailAndPassword(String email,String password);
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT COUNT (u.id) FROM User u")
+    Long getTotalUsers();
 
 }
