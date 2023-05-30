@@ -27,7 +27,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private int cin;
-    private boolean isEnabled ;
+    private boolean desactive;
     private String partenaire;
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Role.class,cascade = CascadeType.ALL)
     @JoinTable(

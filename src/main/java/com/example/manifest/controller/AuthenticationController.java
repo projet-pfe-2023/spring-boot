@@ -1,5 +1,12 @@
 package com.example.manifest.controller;
 
+
+import com.example.manifest.service.AuthenticationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
 import com.example.manifest.Entity.User;
 import com.example.manifest.repository.UserRepository;
 import com.example.manifest.service.AuthenticationService;
@@ -17,12 +24,15 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins ="http://localhost:4200" ,allowCredentials = "true")
+
 @RequestMapping("/api/test/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService service;
+
     private final LogoutService logoutService;
+
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
@@ -36,6 +46,7 @@ public class AuthenticationController {
     ) {
         return ResponseEntity.ok(service.authenticate(request));
     }
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         logoutService.logout(request, response, null);
@@ -54,6 +65,7 @@ public class AuthenticationController {
         }
         return ResponseEntity.ok(user);
     }
+
 
 
 

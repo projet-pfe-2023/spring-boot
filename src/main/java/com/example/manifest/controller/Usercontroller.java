@@ -4,30 +4,24 @@ import com.example.manifest.Entity.ERole;
 import com.example.manifest.Entity.Login;
 import com.example.manifest.Entity.User;
 import com.example.manifest.POJO.UserRoleUpdateRequest;
+import com.example.manifest.Token.TokenRepository;
+import com.example.manifest.exception.ResourceNotFoundException;
 import com.example.manifest.repository.UserRepository;
 import com.example.manifest.service.Userservice;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+
 import org.springframework.web.bind.annotation.*;
 
 
-
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-@Controller
+import java.util.Map;
+import java.util.Optional;
+
+
 @RestController
 @CrossOrigin(origins ="http://localhost:4200",allowCredentials = "true")
 @RequestMapping("/api/test/User")
@@ -38,6 +32,10 @@ public class Usercontroller {
     private   Userservice service;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
+
+
     @GetMapping("/getall")
     public List<User> getAllusers(){
         return service.getAllUsers();
@@ -59,8 +57,18 @@ public class Usercontroller {
     }
 
     @DeleteMapping(path="/{id}")
-    public void deleteAlluser(@PathVariable Integer id){
-        service.deleteUser(id);
+    @Transactional
+    public ResponseEntity<Map<String, Boolean>>  deleteuser(@PathVariable Integer id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User does not exist with id: " + id));
+
+        tokenRepository.deleteByUser(user); // Delete associated tokens
+
+        userRepository.delete(user);
+
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(path="/Login")
@@ -82,4 +90,31 @@ public class Usercontroller {
     }
 
 
+    @PutMapping(path = "/{id}/activer")
+    @CrossOrigin(origins ="http://localhost:4200")
+    public ResponseEntity<User> activateUserAccount(@PathVariable Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        user.setDesactive(true);
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
+
+
+
+    @PutMapping(path = "/{id}/desactiver")
+    @CrossOrigin(origins ="http://localhost:4200")
+    public ResponseEntity<User> desactiverOffre(@PathVariable Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (!optionalUser.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        user.setDesactive(false);
+        userRepository.save(user);
+        return ResponseEntity.ok(user);
+    }
 }
