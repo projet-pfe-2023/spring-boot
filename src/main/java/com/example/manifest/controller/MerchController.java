@@ -10,23 +10,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @RestController
 @CrossOrigin(origins ="http://localhost:4200",allowCredentials = "true")
-@RequestMapping("/api/test/Merch")
+@RequestMapping("/api/test/Marchandise")
 
 public class MerchController {
 
     @Autowired
-    private Merchservice service;
+    private final Merchservice merchservice;
 
-    @GetMapping(path = "/all")
-    public ResponseEntity<List<Merch>> all (@RequestBody Merch merch){return ResponseEntity.ok(service.getAllMerch());
+    public MerchController(Merchservice merchservice) {
+        this.merchservice = merchservice;
     }
 
-    @PostMapping(path="/addmerch")
-    @CrossOrigin(origins ="http://localhost:4200")
-    public Merch createMerch(@RequestBody Merch merch) {
-        return service.addMerch(merch);
+    @GetMapping(path = "/all")
+    public List<Merch> all (){
+        return merchservice.getAllMerch();
+    }
+
+    @PostMapping("/addmerch")
+     public Merch createMerch(@RequestBody Merch merch){
+        return merchservice.addMerch(merch);
     }
 }
