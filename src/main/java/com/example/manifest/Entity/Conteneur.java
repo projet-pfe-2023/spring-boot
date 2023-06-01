@@ -15,6 +15,7 @@ public class Conteneur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private Long code;
     private String type;
     private String scalle;
     private String remp;
