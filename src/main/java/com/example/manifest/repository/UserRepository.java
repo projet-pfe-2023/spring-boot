@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Integer> , CrudRepository<User,Integer> {
 
 
-    public User findUserByEmailAndPassword(String email,String password);
+    Optional<User> findUserByEmailAndPassword(String email,String password);
     Optional<User> findByEmail(String email);
 
     @Query("SELECT COUNT (u.id) FROM User u")
