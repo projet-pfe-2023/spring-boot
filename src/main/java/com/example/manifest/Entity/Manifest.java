@@ -22,7 +22,6 @@ public class Manifest {
     private String douala;
     private String acconsier;
     private String numvoyage;
-    private String heurearrive;
     private Date datedepart;
     private Date datearrive;
     private String lieudepart;
@@ -44,5 +43,12 @@ public class Manifest {
     private Long nembretitre;
     private Long nembrecolis;
     private Long nembreconteneur;
+
+    @Enumerated(EnumType.STRING)
+    private ManifestStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
 }
