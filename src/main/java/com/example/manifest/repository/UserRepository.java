@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<User,Integer> , CrudReposi
     Optional<User> findUserByEmailAndPassword(String email,String password);
     Optional<User> findByEmail(String email);
 
+    Optional<User> findById(Integer userId);
+
     @Query("SELECT COUNT (u.id) FROM User u")
     Long getTotalUsers();
 

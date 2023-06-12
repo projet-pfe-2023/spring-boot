@@ -77,5 +77,9 @@ public class Userservice {
         return repository.getTotalUsers();
     }
 
+    public User getUserById(Integer userId) {
+        Optional<User> userOptional = repository.findById(userId);
+        return userOptional.orElse(null);
+    }
 
 }

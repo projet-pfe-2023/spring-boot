@@ -51,4 +51,5 @@ public class Manifest {
     @JoinColumn(name = "user_id")
     private User user;
 
+
 }
