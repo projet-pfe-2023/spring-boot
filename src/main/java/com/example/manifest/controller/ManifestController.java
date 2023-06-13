@@ -9,18 +9,19 @@ import com.example.manifest.repository.ManifestRepository;
 import com.example.manifest.repository.UserRepository;
 import com.example.manifest.service.Manifestservice;
 import com.example.manifest.service.Userservice;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
+
+
 import java.util.List;
 
 
@@ -68,43 +69,31 @@ public class ManifestController {
     }
 
 
-    @PutMapping("/manifests/{manifestId}")
-    public ResponseEntity<Manifest> updateManifest(@PathVariable("manifestId") Integer manifestId, @RequestBody Manifest requestBody) {
-        Manifest existingManifest = service.getManifestById(manifestId)
+    @PutMapping("/{id}")
+    public ResponseEntity<Manifest> updateManifest(Authentication authentication, @PathVariable Integer id, @RequestBody Manifest updatedManifest) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Manifest existingManifest = service.getManifestById(id)
                 .orElseThrow(() -> new NotFoundException("Manifest not found"));
 
+        if (existingManifest.getStatus() != ManifestStatus.ACCEPTED) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        BeanUtils.copyProperties(updatedManifest, existingManifest, "id", "user");
+
         existingManifest.setStatus(ManifestStatus.ACCEPTED);
-        existingManifest.setBureau(requestBody.getBureau());
-        existingManifest.setDouala(requestBody.getDouala());
-        existingManifest.setAcconsier(requestBody.getAcconsier());
-        existingManifest.setNumvoyage(requestBody.getNumvoyage());
-        existingManifest.setDatedepart(requestBody.getDatedepart());
-        existingManifest.setDatearrive(requestBody.getDatearrive());
-        existingManifest.setLieudepart(requestBody.getLieudepart());
-        existingManifest.setDestination(requestBody.getDestination());
-        existingManifest.setCode(requestBody.getCode());
-        existingManifest.setNom(requestBody.getNom());
-        existingManifest.setAdresse(requestBody.getAdresse());
-        existingManifest.setModetransport(requestBody.getModetransport());
-        existingManifest.setIdentificationnavire(requestBody.getIdentificationnavire());
-        existingManifest.setPaystransporteur(requestBody.getPaystransporteur());
-        existingManifest.setPlacetransporteur(requestBody.getPlacetransporteur());
-        existingManifest.setDecharger(requestBody.getDecharger());
-        existingManifest.setNomconducteur(requestBody.getNomconducteur());
-        existingManifest.setNomconducteur2(requestBody.getNomconducteur2());
-        existingManifest.setNomconducteur3(requestBody.getNomconducteur3());
-        existingManifest.setRerfimmatriculation(requestBody.getRerfimmatriculation());
-        existingManifest.setDateimmatriculation(requestBody.getDateimmatriculation());
-        existingManifest.setTonnagebrut(requestBody.getTonnagebrut());
-        existingManifest.setNembretitre(requestBody.getNembretitre());
-        existingManifest.setNembrecolis(requestBody.getNembrecolis());
-        existingManifest.setNembreconteneur(requestBody.getNembreconteneur());
+        existingManifest.setUser(user);
 
-
-        Manifest updatedManifest = service.updateManifest(existingManifest);
-        return ResponseEntity.ok(updatedManifest);
-
+        Manifest savedManifest = service.saveManifest(existingManifest);
+        return new ResponseEntity<>(savedManifest, HttpStatus.OK);
     }
+
+
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {

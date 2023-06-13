@@ -33,13 +33,10 @@ public class Manifestservice {
         return manifestRepository.findAll();
     }
 
-    public Optional<Manifest> getManifestById(Integer id) {
+    public Optional<Manifest>  getManifestById(Integer id) {
         return manifestRepository.findById(id);
     }
 
-    public Manifest updateManifest(Manifest manifest) {
-        return manifestRepository.save(manifest);
-    }
 
 
     public Manifest saveManifest(Manifest manifest) {

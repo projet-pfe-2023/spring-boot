@@ -63,7 +63,7 @@ public class Usercontroller {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User does not exist with id: " + id));
 
-        tokenRepository.deleteByUser(user); // Delete associated tokens
+        tokenRepository.deleteByUser(user);
 
         userRepository.delete(user);
 
