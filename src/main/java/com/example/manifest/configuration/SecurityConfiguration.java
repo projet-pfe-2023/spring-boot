@@ -47,6 +47,8 @@ public class SecurityConfiguration {
              .permitAll()
              .requestMatchers("/api/test/Conteneur/**")
              .permitAll()
+             .requestMatchers("/api/test/File/**")
+             .permitAll()
              .anyRequest()
              .authenticated()
              .and()
