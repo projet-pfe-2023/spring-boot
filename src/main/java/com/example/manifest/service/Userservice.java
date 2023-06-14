@@ -1,10 +1,9 @@
 package com.example.manifest.service;
 
-import com.example.manifest.Entity.ERole;
-import com.example.manifest.Entity.Login;
-import com.example.manifest.Entity.User;
+import com.example.manifest.Entity.*;
 
 import com.example.manifest.exception.UserNotFoundException;
+import com.example.manifest.repository.ManifestRepository;
 import com.example.manifest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,6 +20,9 @@ public class Userservice {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private final ManifestRepository manifestRepository;
 
     public List<User> getAllUsers() { return repository.findAll(); }
 
@@ -60,14 +61,7 @@ public class Userservice {
         return repository.findAll();
     }
 
-    public ResponseEntity<?>Login(Login login){
-        User user = repository.findUserByEmailAndPassword(login.getEmail(),login.getPassword());
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }else{
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password.");
-        }
-    }
+
 
     public User updateUserRole(Integer id, String newRole) {
         User user = repository.findById(id).orElse(null);
@@ -79,7 +73,13 @@ public class Userservice {
     }
 
     public Long getTotalUsers() {
+
         return repository.getTotalUsers();
+    }
+
+    public User getUserById(Integer userId) {
+        Optional<User> userOptional = repository.findById(userId);
+        return userOptional.orElse(null);
     }
 
 }

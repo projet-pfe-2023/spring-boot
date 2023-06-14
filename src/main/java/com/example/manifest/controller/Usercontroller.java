@@ -2,6 +2,7 @@ package com.example.manifest.controller;
 
 import com.example.manifest.Entity.ERole;
 import com.example.manifest.Entity.Login;
+import com.example.manifest.Entity.Manifest;
 import com.example.manifest.Entity.User;
 import com.example.manifest.POJO.UserRoleUpdateRequest;
 import com.example.manifest.Token.TokenRepository;
@@ -62,7 +63,7 @@ public class Usercontroller {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User does not exist with id: " + id));
 
-        tokenRepository.deleteByUser(user); // Delete associated tokens
+        tokenRepository.deleteByUser(user);
 
         userRepository.delete(user);
 
@@ -71,11 +72,7 @@ public class Usercontroller {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(path="/Login")
-    @CrossOrigin(origins = "http://localhost:4200")
-    public ResponseEntity<?> Login(@RequestBody Login login) {
-        return service.Login(login);
-    }
+
 
     @PutMapping("/users/{id}/role")
     public ResponseEntity<User> updateUserRole(@PathVariable Integer id, @RequestBody UserRoleUpdateRequest request) {
@@ -122,4 +119,6 @@ public class Usercontroller {
     public Long getTotalUsers() {
         return service.getTotalUsers();
     }
+
+
 }
