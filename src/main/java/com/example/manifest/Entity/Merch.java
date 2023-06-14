@@ -1,5 +1,6 @@
 package com.example.manifest.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,11 @@ public class Merch {
     private Long mass;
     private Long volume;
     private String designation;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
 
 }

@@ -20,7 +20,15 @@ public class Conteneurservice {
 
     public List<Conteneur> getAllConteneur() { return repository.findAll(); }
 
-    public Conteneur addConteneur(Conteneur conteneur) {
+
+    public Conteneur saveConteneur(Conteneur conteneur) {
         return repository.save(conteneur);
+    }
+
+    public List<Conteneur> ConteneurByUserId(Integer userId) {
+        return repository.findByUserId(userId);
+    }
+    public void deleteConteneur(Integer id) {
+        repository.deleteById(id);
     }
 }

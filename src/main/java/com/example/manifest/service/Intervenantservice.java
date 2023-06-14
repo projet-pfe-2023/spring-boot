@@ -1,5 +1,6 @@
 package com.example.manifest.service;
 
+import com.example.manifest.Entity.Connaissement;
 import com.example.manifest.Entity.Intervenant;
 
 import com.example.manifest.repository.IntervenantRepository;
@@ -20,7 +21,21 @@ public class Intervenantservice {
 
     public List<Intervenant> getAllIntervenant() { return repository.findAll(); }
 
-    public Intervenant addIntervenant(Intervenant intervenant) {
+
+
+    public Intervenant saveIntervenant(Intervenant intervenant) {
         return repository.save(intervenant);
+    }
+
+
+
+    public List<Intervenant> IntervenantByUserId(Integer userId) {
+        return repository.findByUserId(userId);
+    }
+
+
+    public void deleteConteneur(Integer id) {
+
+        repository.deleteById(id);
     }
 }
