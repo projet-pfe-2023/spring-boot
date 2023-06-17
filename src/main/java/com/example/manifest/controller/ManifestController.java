@@ -116,6 +116,10 @@ public class ManifestController {
     public Long getTotalManifest() {
         return service.getTotalManifest();
     }
+    @GetMapping("/totalupdate")
+    public  Long getTotalManifestsWithAcceptedStatus(){
+        return service.getTotalManifestsWithAcceptedStatus();
+    }
 
     @GetMapping(path = "/totalmanifest")
     public Long getTotalManifestByStatus() {

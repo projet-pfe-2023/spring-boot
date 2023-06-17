@@ -7,6 +7,7 @@ import com.example.manifest.Token.TokenType;
 import com.example.manifest.controller.AuthenticationRequest;
 import com.example.manifest.controller.AuthenticationResponse;
 import com.example.manifest.controller.RegisterRequest;
+import com.example.manifest.exception.UserNotActiveException;
 import com.example.manifest.exception.UserNotFoundException;
 import com.example.manifest.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,9 +37,11 @@ public class AuthenticationService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .cin(request.getCin())
                 .partenaire(request.getPartenaire())
+                .desactive(false)
                 .eRole(ERole.USER)
                 .build();
         var savedUser = repository.save(user);
+
         var jwtToken = jwtService.generateToken(user);
         saveUserToken(savedUser,jwtToken);
         return AuthenticationResponse.builder()
@@ -57,6 +60,11 @@ public class AuthenticationService {
         );
         var user = repository.findByEmail(request.getEmail())
                 .orElseThrow();
+
+        if (user.isDesactive() == false) {
+            throw new UserNotActiveException("not found");
+        }
+
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);

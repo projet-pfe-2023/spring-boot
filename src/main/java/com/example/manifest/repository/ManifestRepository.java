@@ -4,6 +4,7 @@ import com.example.manifest.Entity.Manifest;
 import com.example.manifest.Entity.ManifestStatus;
 import com.example.manifest.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,10 @@ public interface ManifestRepository extends JpaRepository<Manifest,Integer> {
     @Query("SELECT COUNT (m.id) FROM Manifest m WHERE m.status = :status")
     Long getTotalManifestByStatus(@Param("status") ManifestStatus status);
 
+    @Query("SELECT COUNT(m.id) FROM Manifest m WHERE m.status = 'ACCEPTED'")
+    Long getTotalManifestsWithAcceptedStatus();
+
+    @Modifying
+    @Query("DELETE FROM Manifest t WHERE t.user = :user")
+    void deleteByUser(User user);
 }

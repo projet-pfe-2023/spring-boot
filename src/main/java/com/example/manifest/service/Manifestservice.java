@@ -66,6 +66,10 @@ public class Manifestservice {
         return manifestRepository.getTotalManifestByStatus(ManifestStatus.ACCEPTED);
     }
 
+    public  Long getTotalManifestsWithAcceptedStatus() {
+        return manifestRepository.getTotalManifestsWithAcceptedStatus();
+    }
+
 
     public List<Manifest> getManifestsByUserId(Integer userId) {
         return manifestRepository.findByUserId(userId);

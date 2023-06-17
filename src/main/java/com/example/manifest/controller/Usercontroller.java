@@ -7,7 +7,7 @@ import com.example.manifest.Entity.User;
 import com.example.manifest.POJO.UserRoleUpdateRequest;
 import com.example.manifest.Token.TokenRepository;
 import com.example.manifest.exception.ResourceNotFoundException;
-import com.example.manifest.repository.UserRepository;
+import com.example.manifest.repository.*;
 import com.example.manifest.service.Userservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +35,16 @@ public class Usercontroller {
     private UserRepository userRepository;
     @Autowired
     private TokenRepository tokenRepository;
+    @Autowired
+    private ManifestRepository manifestRepository;
+    @Autowired
+    private MerchRepository merchRepository;
+    @Autowired
+    private IntervenantRepository intervenantRepository;
+    @Autowired
+    private ConteneurRepository conteneurRepository;
+    @Autowired
+    private ConnaissementRepository connaissementRepository;
 
 
     @GetMapping("/getall")
@@ -64,9 +74,12 @@ public class Usercontroller {
                 .orElseThrow(() -> new ResourceNotFoundException("User does not exist with id: " + id));
 
         tokenRepository.deleteByUser(user);
-
+        manifestRepository.deleteByUser(user);
+        merchRepository.deleteByUser(user);
+        intervenantRepository.deleteByUser(user);
+        conteneurRepository.deleteByUser(user);
+        connaissementRepository.deleteByUser(user);
         userRepository.delete(user);
-
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);
