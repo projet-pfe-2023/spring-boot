@@ -22,10 +22,10 @@ public class Connaissement {
     private String nature;
     private String lieuchargement;
     private String lieudechargement;
-    private Long colis;
-    private Long nembre;
-    private Long poidbrut;
-    private Long volume;
+    private Integer colis;
+    private Integer nembre;
+    private Integer poidbrut;
+    private Integer volume;
 
 
     @ManyToOne

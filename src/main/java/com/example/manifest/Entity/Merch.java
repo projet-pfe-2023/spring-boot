@@ -18,8 +18,8 @@ public class Merch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String marque;
-    private Long mass;
-    private Long volume;
+    private Integer mass;
+    private Integer volume;
     private String designation;
 
     @ManyToOne

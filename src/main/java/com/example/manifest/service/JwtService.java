@@ -1,5 +1,6 @@
 package com.example.manifest.service;
 
+import com.example.manifest.Entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -7,12 +8,15 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -27,12 +31,21 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
     public String generateToken(UserDetails userDetails){
+
         return generateToken(new HashMap<>(),userDetails);
     }
     public String generateToken(Map<String, Object>extraClaims, UserDetails userDetails){
+        List<String> roles = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        Claims claims = Jwts.claims();
+        claims.putAll(extraClaims);
+        claims.put("roles", roles);
         return Jwts
                 .builder()
-                .setClaims(extraClaims)
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))

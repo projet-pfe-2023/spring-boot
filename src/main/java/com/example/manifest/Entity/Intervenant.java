@@ -21,7 +21,7 @@ public class Intervenant {
     private String adresse;
     private String numerocontribuable;
     private String nom2;
-    private Long telephone;
+    private Integer telephone;
     private String email;
     private String adresse2;
 

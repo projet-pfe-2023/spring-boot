@@ -40,10 +40,10 @@ public class Manifest {
     private String nomconducteur3;
     private String rerfimmatriculation;
     private Date dateimmatriculation;
-    private Long tonnagebrut;
-    private Long nembretitre;
-    private Long nembrecolis;
-    private Long nembreconteneur;
+    private Integer tonnagebrut;
+    private Integer nembretitre;
+    private Integer nembrecolis;
+    private Integer nembreconteneur;
 
     @Enumerated(EnumType.STRING)
     private ManifestStatus status;
